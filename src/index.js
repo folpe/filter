@@ -1,5 +1,5 @@
-var url = "https://jsonplaceholder.typicode.com/users";
-//var url = "https://jsonplaceholder.typicode.com/photos";
+//var url = "https://jsonplaceholder.typicode.com/users";
+var url = "https://jsonplaceholder.typicode.com/photos";
 
 async function getData(url) {
   let res = await fetch(url);
@@ -31,8 +31,9 @@ function displayResults(results) {
     .map(
       (elem, index) =>
         `<div>${index}
-        <div>Name : ${elem["name"]} - ${elem["username"]}</div>
-        <div>Email : ${elem["email"]}
+        <div>Name : ${elem["title"]} </div>
+        <div><img src="${elem["thumbnailUrl"]}"/></div> 
+        <a href="${elem["url"]}">URL : ${elem["url"]} </a>
     </div>`
     )
     .join("");
