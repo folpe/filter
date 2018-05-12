@@ -16,6 +16,7 @@ var inputSearch = document.getElementById("searchText");
 var resultsElem = document.getElementById("results");
 
 inputSearch.addEventListener("input", function() {
+  resultsElem.innerHTML = "";
   var inputSearchValue = inputSearch.value;
   if (inputSearchValue !== "" && inputSearchValue.length >= 3) {
     var searchResults = filterData(myData, inputSearchValue);
@@ -26,10 +27,12 @@ inputSearch.addEventListener("input", function() {
 });
 
 function displayResults(results, key) {
-  resultsElem.innerHTML = "";
-  results.map(
-    (elem, index) => (resultsElem.innerHTML += `<p>${index} - ${elem[key]}</p>`)
-  );
+  results.map((elem, index) => {
+    let myElem = document.createElement("div");
+    let myText = document.createTextNode(`${index} - ${elem[key]}`);
+    myElem.appendChild(myText);
+    resultsElem.appendChild(myElem);
+  });
 }
 
 function filterData(data, searchKey) {
