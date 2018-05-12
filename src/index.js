@@ -36,7 +36,11 @@ function displayResults(results) {
     </div>`
     )
     .join("");
-  resultsElem.innerHTML = myResults;
+  if (myResults.length) {
+    resultsElem.innerHTML = myResults;
+  } else {
+    resultsElem.innerHTML = "pas de résultat";
+  }
 }
 
 function filterData(data, searchKey) {
