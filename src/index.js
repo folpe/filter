@@ -1,5 +1,5 @@
-//var url = "https://jsonplaceholder.typicode.com/users";
-var url = "https://jsonplaceholder.typicode.com/photos";
+var url = "https://jsonplaceholder.typicode.com/users";
+//var url = "https://jsonplaceholder.typicode.com/photos";
 
 async function getData(url) {
   let res = await fetch(url);
@@ -18,21 +18,25 @@ var resultsElem = document.getElementById("results");
 inputSearch.addEventListener("input", function() {
   resultsElem.innerHTML = "";
   var inputSearchValue = inputSearch.value;
-  if (inputSearchValue !== "" && inputSearchValue.length >= 3) {
+  if (inputSearchValue !== "" && inputSearchValue.length >= 1) {
     var searchResults = filterData(myData, inputSearchValue);
-    displayResults(searchResults, "title");
+    displayResults(searchResults);
   } else {
     resultsElem.innerHTML = "";
   }
 });
 
-function displayResults(results, key) {
-  results.map((elem, index) => {
-    let myElem = document.createElement("div");
-    let myText = document.createTextNode(`${index} - ${elem[key]}`);
-    myElem.appendChild(myText);
-    resultsElem.appendChild(myElem);
-  });
+function displayResults(results) {
+  var myResults = results
+    .map(
+      (elem, index) =>
+        `<div>${index}
+        <div>Name : ${elem["name"]} - ${elem["username"]}</div>
+        <div>Email : ${elem["email"]}
+    </div>`
+    )
+    .join("");
+  resultsElem.innerHTML = myResults;
 }
 
 function filterData(data, searchKey) {
