@@ -1,56 +1,47 @@
-//var url = "https://jsonplaceholder.typicode.com/users";
-var url = "https://jsonplaceholder.typicode.com/photos";
+import { Results } from './components/Results'
+import { fetchData } from './utils/fetcher'
+import { filterAllKeys } from './utils/filters'
 
-async function getData(url) {
-  let res = await fetch(url);
-  let json = await res.json();
-  return json;
+const baseUrl = 'https://jsonplaceholder.typicode.com/'
+const endpoint = 'photos' // ['users', 'photos']
+const inputSearch = document.getElementById('searchText')
+const resultsElem = document.getElementById('results')
+
+let myData = {}
+;(async () => {
+  myData = await fetchData(baseUrl + endpoint)
+  const slicedData = myData.slice(0, 100)
+  return slicedData
+})()
+
+const removeResults = () => {
+  resultsElem.innerHTML = ''
 }
 
-var myData = {};
-getData(url).then(result => {
-  myData = result;
-});
+const inputHandler = () => {
+  const { value } = inputSearch
+  if (value.length < 3) return (resultsElem.innerHTML = '')
 
-var inputSearch = document.getElementById("searchText");
-var resultsElem = document.getElementById("results");
+  removeResults()
+  const resultsData = filterAllKeys({
+    data: myData,
+    search: value,
+  })
+  displayResults(resultsData)
+}
 
-inputSearch.addEventListener("input", function() {
-  resultsElem.innerHTML = "";
-  var inputSearchValue = inputSearch.value;
-  if (inputSearchValue !== "" && inputSearchValue.length >= 1) {
-    var searchResults = filterData(myData, inputSearchValue);
-    displayResults(searchResults);
-  } else {
-    resultsElem.innerHTML = "";
-  }
-});
+inputSearch.addEventListener('input', inputHandler)
 
-function displayResults(results) {
-  var myResults = results
-    .map(
-      (elem, index) =>
-        `<div>${index}
-        <div>Name : ${elem["title"]} </div>
-        <div><img src="${elem["thumbnailUrl"]}"/></div> 
-        <a href="${elem["url"]}">URL : ${elem["url"]} </a>
-    </div>`
-    )
-    .join("");
+const displayResults = (results) => {
+  const myResults = results
+    .map((elem, index) => {
+      return Results({ data: elem })
+    })
+    .join('')
+
   if (myResults.length) {
-    resultsElem.innerHTML = myResults;
+    resultsElem.innerHTML = myResults
   } else {
-    resultsElem.innerHTML = "pas de résultat";
+    resultsElem.innerHTML = 'pas de résultat'
   }
-}
-
-function filterData(data, searchKey) {
-  return data.filter(obj =>
-    Object.keys(obj).some(key =>
-      obj[key]
-        .toString()
-        .toLowerCase()
-        .includes(searchKey.toLowerCase())
-    )
-  );
 }
